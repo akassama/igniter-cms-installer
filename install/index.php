@@ -133,10 +133,10 @@ function checkRequirements() {
           Igniter CMS has been successfully installed 🎉
         </div>
         <p>You can now access your site:</p>
-        <a href="../public/" class="btn btn-primary">
+        <a href="../" class="btn btn-primary">
           Go to Site <i class="bi bi-box-arrow-up-right"></i>
         </a>
-        <a href="../public/admin" class="btn btn-secondary">
+        <a href="../account" class="btn btn-secondary">
           Go to Admin <i class="bi bi-person-lock"></i>
         </a>
       <?php endif; ?>
