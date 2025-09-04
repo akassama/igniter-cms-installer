@@ -44,40 +44,32 @@ function runComposer() {
     $output = [];
     $return_var = 0;
     $rootPath = realpath(__DIR__ . "/..");
+    
+    // Check if vendor already exists
+    if (is_dir($rootPath . "/vendor")) {
+        return [0, "Vendor directory already exists"];
+    }
 
     // Add --no-dev and --optimize-autoloader for faster installation
     $composerArgs = "install --no-dev --optimize-autoloader --no-interaction --no-progress";
     
-    // Try local composer.phar
+    // Try to detect composer path
+    $composerCommand = "composer";
     if (file_exists($rootPath . "/composer.phar")) {
-        $command = "php " . escapeshellarg($rootPath . "/composer.phar") . " " . $composerArgs . " -d " . escapeshellarg($rootPath) . " 2>&1";
-    } else {
-        // Try global composer
-        $command = "composer " . $composerArgs . " -d " . escapeshellarg($rootPath) . " 2>&1";
-    }
-
-    // Execute in background to avoid timeout
-    if (substr(php_uname(), 0, 7) == "Windows") {
-        pclose(popen("start /B " . $command, "r"));
-    } else {
-        exec($command . " > /dev/null &");
-    }
-
-    // Wait a bit and check if vendor directory exists
-    $maxWait = 180; // 3 minutes
-    $waitInterval = 5; // check every 5 seconds
-    $elapsed = 0;
-    
-    while ($elapsed < $maxWait) {
-        sleep($waitInterval);
-        $elapsed += $waitInterval;
-        
-        if (is_dir($rootPath . "/vendor")) {
-            return [0, "Composer dependencies installed successfully"];
-        }
+        $composerCommand = "php " . escapeshellarg($rootPath . "/composer.phar");
     }
     
-    return [1, "Composer installation may have timed out. Please run 'composer install' manually."];
+    // Build the full command
+    $command = $composerCommand . " " . $composerArgs . " -d " . escapeshellarg($rootPath) . " 2>&1";
+    
+    // Execute composer synchronously with output capture
+    exec($command, $output, $return_var);
+    
+    if ($return_var === 0) {
+        return [0, "Composer dependencies installed successfully\n" . implode("\n", $output)];
+    } else {
+        return [1, "Composer installation failed:\n" . implode("\n", $output)];
+    }
 }
 
 /**
@@ -209,8 +201,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
             <input type="password" name="db_pass" class="form-control">
           </div>
           <div class="mb-3">
-            <label class="form-label">Base URL</label>
-            <input type="url" name="app_url" class="form-control" required value="<?= (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']) ?>">
+            <?php
+            $installBaseUrl = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . dirname($_SERVER['REQUEST_URI']);
+            // Remove trailing '/install' if it exists
+            $installBaseUrl = preg_replace('/\/install$/', '/', $installBaseUrl);
+            ?>
+            <input type="url" name="app_url" class="form-control" required value="<?= $installBaseUrl ?>">
           </div>
           <button type="submit" class="btn btn-success">
             Continue <i class="bi bi-arrow-right-circle"></i>
@@ -234,13 +230,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
 
           <?php if (!empty($_SESSION['composer_status'])): ?>
             <?php if ($_SESSION['composer_status'] === "success"): ?>
-              <div class="alert alert-success">Composer dependencies installed successfully ✅</div>
+              <div class="alert alert-success">
+                <h5>✅ Composer Dependencies</h5>
+                <pre class="bg-dark text-light p-2 small rounded mt-2"><?= htmlspecialchars($_SESSION['composer_output']) ?></pre>
+              </div>
             <?php else: ?>
               <div class="alert alert-warning">
-                ⚠️ Composer install failed. Please run manually:<br>
-                <code>composer install</code>
+                <h5>⚠️ Composer Notice</h5>
+                <p><?= nl2br(htmlspecialchars($_SESSION['composer_output'])) ?></p>
+                <p>Please run this command manually in your project root:</p>
+                <code>composer install --no-dev --optimize-autoloader</code>
               </div>
-              <pre class="bg-dark text-light p-2 small rounded"><?= htmlspecialchars($_SESSION['composer_output']) ?></pre>
             <?php endif; ?>
           <?php endif; ?>
 
