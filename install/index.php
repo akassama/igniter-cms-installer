@@ -4,6 +4,56 @@ session_start();
 
 $step = $_GET['step'] ?? 1;
 
+/**
+ * Run composer install (tries composer.phar first, then global composer).
+ */
+function runComposer() {
+    $output = [];
+    $return_var = 0;
+
+    $rootPath = realpath(__DIR__ . "/..");
+
+    // Try local composer.phar
+    if (file_exists($rootPath . "/composer.phar")) {
+        exec("php " . escapeshellarg($rootPath . "/composer.phar") . " install -d " . escapeshellarg($rootPath) . " 2>&1", $output, $return_var);
+    } else {
+        // Try global composer
+        exec("composer install -d " . escapeshellarg($rootPath) . " 2>&1", $output, $return_var);
+    }
+
+    return [$return_var, implode("\n", $output)];
+}
+
+/**
+ * System requirements check.
+ */
+function checkRequirements() {
+    $errors = [];
+
+    // PHP version
+    if (PHP_VERSION_ID < 80000) {
+        $errors[] = "PHP 8.0+ required, you have " . PHP_VERSION;
+    }
+
+    // Required extensions
+    if (!extension_loaded('zip')) $errors[] = "ZIP extension not enabled.";
+    if (!extension_loaded('gd')) $errors[] = "GD extension not enabled.";
+    if (!extension_loaded('intl')) $errors[] = "INTL extension not enabled.";
+
+    // Execution time
+    $maxExec = (int) ini_get("max_execution_time");
+    if ($maxExec !== 0 && $maxExec < 60) {
+        $errors[] = "max_execution_time should be at least 60 seconds (current: {$maxExec})";
+    }
+
+    // File system
+    if (!is_writable(__DIR__ . "/../")) {
+        $errors[] = "Project root not writable.";
+    }
+
+    return $errors;
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
     $db_host = trim($_POST['db_host']);
@@ -51,17 +101,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
 
     $mysqli->close();
 
+    // Run composer install
+    list($code, $composerOutput) = runComposer();
+
+    // Swap index.php
+    $rootPath = realpath(__DIR__ . "/..");
+    $redirectIndex = $rootPath . "/index.php";
+    $realIndex = $rootPath . "/index.renamed.php";
+
+    if (file_exists($redirectIndex)) {
+        unlink($redirectIndex);
+    }
+    if (file_exists($realIndex)) {
+        rename($realIndex, $rootPath . "/index.php");
+    }
+
+    // Save composer logs to session for step 3
+    $_SESSION['composer_status'] = $code === 0 ? "success" : "fail";
+    $_SESSION['composer_output'] = $composerOutput;
+
     header("Location: index.php?step=3");
     exit;
-}
-
-function checkRequirements() {
-    $errors = [];
-    if (PHP_VERSION_ID < 80000) $errors[] = "PHP 8.0+ required, you have " . PHP_VERSION;
-    if (!extension_loaded('zip')) $errors[] = "ZIP extension not enabled.";
-    if (!extension_loaded('gd')) $errors[] = "GD extension not enabled.";
-    if (!is_writable(__DIR__ . "/../")) $errors[] = "Project root not writable.";
-    return $errors;
 }
 
 ?>
@@ -132,11 +192,25 @@ function checkRequirements() {
         <div class="alert alert-success mt-3">
           Igniter CMS has been successfully installed 🎉
         </div>
+
+        <?php if (!empty($_SESSION['composer_status'])): ?>
+          <?php if ($_SESSION['composer_status'] === "success"): ?>
+            <div class="alert alert-success">Composer dependencies installed successfully ✅</div>
+          <?php else: ?>
+            <div class="alert alert-warning">
+              ⚠️ Composer install failed. Please run manually:<br>
+              <code>composer install</code>
+            </div>
+            <pre class="bg-dark text-light p-2 small rounded"><?= htmlspecialchars($_SESSION['composer_output']) ?></pre>
+          <?php endif; ?>
+          <?php unset($_SESSION['composer_status'], $_SESSION['composer_output']); ?>
+        <?php endif; ?>
+
         <p>You can now access your site:</p>
-        <a href="../" class="btn btn-primary">
+        <a href="../public/" class="btn btn-primary">
           Go to Site <i class="bi bi-box-arrow-up-right"></i>
         </a>
-        <a href="../account" class="btn btn-secondary">
+        <a href="../public/admin" class="btn btn-secondary">
           Go to Admin <i class="bi bi-person-lock"></i>
         </a>
       <?php endif; ?>
