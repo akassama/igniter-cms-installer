@@ -1,0 +1,170 @@
+#--------------------------------------------------------------------
+# Example Environment Configuration file
+#
+# This file can be used as a starting point for your own
+#  .env files, and contains most of the possible settings
+# available in a default install.
+#
+# By default, all of the settings are commented out. If you want
+# to override the setting, you must un-comment it by removing the '#'
+# at the beginning of the line.
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+# ENVIRONMENT (development/production)
+#--------------------------------------------------------------------
+
+CI_ENVIRONMENT = development
+
+#--------------------------------------------------------------------
+# APP
+#--------------------------------------------------------------------
+
+# app.baseURL = ''
+# If you have trouble with `.`, you could also use `_`.
+# app_baseURL = 'http://localhost/apps/igniter-cms/'
+# app.forceGlobalSecureRequests = false
+# app.CSPEnabled = false
+
+#--------------------------------------------------------------------
+# DATABASE
+#--------------------------------------------------------------------
+# database.default.hostname = localhost
+# database.default.database = igniter_cms_pro_db
+# database.default.username = root
+# database.default.password = 
+# database.default.DBDriver = MySQLi
+# database.default.DBPrefix =
+# database.default.port = 3306
+
+# If you use MySQLi as tests, first update the values of Config\Database::$tests.
+# database.tests.hostname = localhost
+# database.tests.database = ci4_test
+# database.tests.username = root
+# database.tests.password = root
+# database.tests.DBDriver = MySQLi
+# database.tests.DBPrefix =
+# database.tests.charset = utf8mb4
+# database.tests.DBCollat = utf8mb4_general_ci
+# database.tests.port = 3306
+
+#--------------------------------------------------------------------
+# ENCRYPTION
+#--------------------------------------------------------------------
+
+# encryption.key =
+
+#--------------------------------------------------------------------
+# SESSION
+#--------------------------------------------------------------------
+
+# session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
+# session.savePath = null
+
+#--------------------------------------------------------------------
+# LOGGER
+#--------------------------------------------------------------------
+
+# logger.threshold = 4
+
+#--------------------------------------------------------------------
+# Query Limits
+#--------------------------------------------------------------------
+QUERY_LIMIT_SINGLE = 1
+QUERY_LIMIT_VERY_LOW = 3
+QUERY_LIMIT_LOW = 6
+QUERY_LIMIT_MEDIUM = 12
+QUERY_LIMIT_DEFAULT = 25
+QUERY_LIMIT_HIGH = 50
+QUERY_LIMIT_VERY_HIGH = 100
+QUERY_LIMIT_200 = 200
+QUERY_LIMIT_500 = 500
+QUERY_LIMIT_MAX = 1000
+QUERY_LIMIT_ULTRA_MAX = 10000
+
+#--------------------------------------------------------------------
+# Paginations
+#--------------------------------------------------------------------
+PAGINATE_VERY_LOW = 10
+PAGINATE_LOW = 20
+PAGINATE_DEFAULT = 50
+PAGINATE_HIGH = 100
+PAGINATE_VERY_HIGH = 500
+PAGINATE_MAX = 1000
+
+#--------------------------------------------------------------------
+# MESSAGES
+#--------------------------------------------------------------------
+MESSAGE_WRONG_CREDENTIALS = "Sign In Failed. The provided username/email or password is incorrect."
+MESSAGE_LOGIN_SUCCESS = "Login successful."
+MESSAGE_LOGOUT_SUCCESS = "You have been successfully logged out."
+MESSAGE_PENDING_ACTIVATION = "Your account has not been activated yet or is no longer active. Please contact the administrator."
+MESSAGE_TOO_MANY_FAILED_LOGINS = "Too many failed login attempts. Your IP has been blocked for 1 hour."
+MESSAGE_INVALID_ACCESS = "You do not have access to this area."
+MESSAGE_CREATE_SUCCESS = "Record created successfully."
+MESSAGE_EDIT_SUCCESS = "Record updated successfully."
+MESSAGE_DELETE_SUCCESS = "Record removed successfully."
+MESSAGE_MISSING_REQUIRED_INPUTS = "There are validation errors. Possible missing required inputs."
+MESSAGE_SENT_CONTACT = "Message sent successfully."
+MESSAGE_FAILED_CONTACT = "Form submission failed."
+MESSAGE_NOT_FOUND = "Record not found."
+MESSAGE_ALREADY_EXIST = "[Record] already exists in table."
+MESSAGE_ERROR = "Oops! Something went wrong. Please try again later."
+MESSAGE_RESET_LINK = "A password reset link has been sent to your email address. Please check your inbox and follow the instructions to reset your password. If you do not see the email in your inbox, please check your spam or junk folder."
+MESSAGE_INVALID_RESET_LINK = "Invalid or expired password reset link."
+MESSAGE_PASSWORD_RESET_REQUIRED = "For security reasons, you need to change your password before continuing. Your current password was either set by an administrator or is a default password."
+MESSAGE_PASSWORD_RESET_SUCCESSFUL = "Your password has been reset successfully. You can now log in with your new password."
+MESSAGE_PASSWORD_RESET_FAILED = "Unable to reset password. Please try again"
+MESSAGE_NON_EXISTING_RESET_EMAIL = "We are sorry, but the email address you entered is not associated with any account. Please check the email address and try again."
+MESSAGE_EXCEPTION = "There was an error processing your request. Please try again. If this error persists, please see or send an email to system administrator."
+MESSAGE_CONTACT_SUCCESSFUL = "Your message has been sent successfully."
+MESSAGE_CONTACT_FAILED = "Oops! Something went wrong with your message submission. Please try again later."
+MESSAGE_SUBSCRIPTION_SUCCESSFUL = "You have successfully subscribed!"
+MESSAGE_SUBSCRIPTION_FAILED = "Sorry, something went wrong with your subscription. Please try again."
+
+#--------------------------------------------------------------------
+# FAETURE FLAGS
+#--------------------------------------------------------------------
+FEATURE_FLAG_EXEMPTIONS="exempt-user1@example.com,exempt-user2@example.com"
+FEATURE_BACK_END=true
+FEATURE_FRONT_END=true
+FEATURE_CMS=true
+FEATURE_APPEARANCE=true
+FEATURE_FILE_MANAGER=true
+FEATURE_SETTINGS=true
+FEATURE_ADMIN=true
+FEATURE_ASK_AI=true
+FEATURE_PLUGINS=true
+
+#CI FILE MANAGER 
+CI_FM_FILES_UPLOAD_PATH="public/uploads/files"
+CI_FM_ROUTE="account/file-manager"
+CI_FM_SECRET="your-secret-key"
+CI_FM_METADATA_FILE="public/uploads/files/file_metadata.json"
+CI_FM_MAX_UPLOAD_SIZE=10485760 # 10MB in bytes
+CI_FM_ALLOWED_UPLOAD_TYPES="jpg,jpeg,png,gif,webp,pdf,doc,docx,xls,xlsx,zip,rar,txt"
+CI_FM_PRIMARY_COLOR="#ef4322"
+CI_FM_SECONDARY_COLOR="#ff6b3b"
+CI_FM_LAST_MODIFIED_DATE_FORMAT="d/m/Y g:i A"
+CI_FM_LAST_UPDATED_DATE_FORMAT="F j, Y, g:i A"
+
+#--------------------------------------------------------------------
+# EMAIL
+#--------------------------------------------------------------------
+EMAIL_FROM = "example@email.com"
+MAILJET_API_KEY= "your-mailjet-api-key"
+MAILJET_SECRET_KEY = "your-mailjet-secret-key"
+
+#--------------------------------------------------------------------
+# OTHER SETTINGS
+#--------------------------------------------------------------------
+APP_NAME = "Igniter CMS App"
+APP_VERSION = 1.2.0
+APP_KEY=your-app-id
+APP_USE_CAPTCHA = "No"
+APP_API_KEY = "default"
+DEMO_MODE = false
+CUSTOM_GEMINI_REQUEST_URL = https://api.ignitercms.com/ai/get-ai-response/
+PUBLIC_GEMINI_REQUEST_KEY = HL3SG0Q3Fm9mDDK57raurKnQ5Pfs1LJm0UgR1RXS1EeIFraw6oPE3p2o9OLo8MwKX0loW6EXGELhXP0aB3k48PYSZTpYM82JlyE2RZlVYfNZvWOgoeMOmVBHVIAz1xaB
+PLUGIN_API_REQUEST_KEY = plugin-api-request-key
+REMEMBER_ME_COOKIE = "__ci_token"
