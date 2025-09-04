@@ -2,46 +2,6 @@
 
 /*
  *---------------------------------------------------------------
- * INSTALLER REDIRECT AND CLEANUP
- *---------------------------------------------------------------
- */
-$installPath = __DIR__ . '/install';
-
-if (is_dir($installPath)) {
-    // If install just completed, allow cleanup
-    if (isset($_GET['installed']) && $_GET['installed'] == 1) {
-        // Recursively delete install folder
-        function rrmdir($dir) {
-            foreach (array_diff(scandir($dir), ['.', '..']) as $file) {
-                $path = "$dir/$file";
-                if (is_dir($path)) {
-                    rrmdir($path);
-                } else {
-                    unlink($path);
-                }
-            }
-            rmdir($dir);
-        }
-        rrmdir($installPath);
-
-        // Redirect to base URL without query string
-        $baseUrl = strtok(
-            (isset($_SERVER['HTTPS']) ? "https://" : "http://") .
-            $_SERVER['HTTP_HOST'] .
-            $_SERVER['REQUEST_URI'],
-            '?'
-        );
-        header("Location: $baseUrl");
-        exit;
-    }
-
-    // Otherwise, redirect into installer
-    header("Location: install/");
-    exit;
-}
-
-/*
- *---------------------------------------------------------------
  * CHECK PHP VERSION
  *---------------------------------------------------------------
  */
