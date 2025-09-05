@@ -26,7 +26,6 @@ if (file_exists(__DIR__ . '/../.env')) {
                         <a href="../" class="btn btn-primary">
                             Go to Website <i class="bi bi-box-arrow-up-right"></i>
                         </a>
-                        <p class="mt-3 text-muted">If you need to reinstall, please delete the .env file first.</p>
                     </div>
                 </div>
             </div>
@@ -101,6 +100,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
         header("Location: index.php?step=2");
         exit;
     }
+
+    echo '<script>
+    $("#installing-div").show();
+    </script>'
+    ;
 
     // Generate .env
     $envTemplate = file_get_contents(__DIR__ . "/../env");
@@ -211,6 +215,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
           <button type="submit" class="btn btn-success">
             Continue <i class="bi bi-arrow-right-circle"></i>
           </button>
+          <div class="class my-2">
+            <div class="alert alert-warning d-none" id="installing-div">
+              <strong>Warning!</strong> You should <a href="#" class="alert-link">read this message</a>.
+            </div>
+          </div>
         </form>
       <?php endif; ?>
 
@@ -263,6 +272,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
                   document.getElementById('content').style.display = 'block';
               }, 2000);
           });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+
         </script>
       <?php endif; ?>
 
