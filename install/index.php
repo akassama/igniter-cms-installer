@@ -101,11 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
         exit;
     }
 
-    echo '<script>
-    $("#installing-div").show();
-    </script>'
-    ;
-
     // Generate .env
     $envTemplate = file_get_contents(__DIR__ . "/../env");
     $appKey = bin2hex(random_bytes(32));
@@ -212,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
             ?>
             <input type="url" name="app_url" class="form-control" required value="<?= $installBaseUrl ?>">
           </div>
-          <button type="submit" class="btn btn-success">
+          <button type="submit" class="btn btn-success" id="continue-btn">
             Continue <i class="bi bi-arrow-right-circle"></i>
           </button>
           <div class="class my-2">
@@ -275,7 +270,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
+        $(document).ready(function () {
+          $('form').on('submit', function (e) {
+            // Prevent actual form submission for validation
+            e.preventDefault();
 
+            // Check if form is valid using HTML5 validation
+            if (this.checkValidity()) {
+              // Show the hidden alert div
+              $('#installing-div').removeClass('d-none');
+            } else {
+              // Trigger native validation UI
+              this.reportValidity();
+            }
+          });
+        });
         </script>
       <?php endif; ?>
 
