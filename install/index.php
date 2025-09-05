@@ -271,18 +271,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $step == 2) {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
         $(document).ready(function () {
-          $('form').on('submit', function (e) {
-            // Prevent actual form submission for validation
-            e.preventDefault();
-
-            // Check if form is valid using HTML5 validation
-            if (this.checkValidity()) {
-              // Show the hidden alert div
-              $('#installing-div').removeClass('d-none');
-            } else {
-              // Trigger native validation UI
-              this.reportValidity();
-            }
+          $('continue-btn').on('click', function (e) {
+            // Show the hidden alert div
+            $('#installing-div').removeClass('d-none');
           });
         });
         </script>
